@@ -1,4 +1,4 @@
-# @carles/component-identity
+# @carlesandres/component-identity
 
 Audit exported React components for a canonical `data-component` root attribute.
 
@@ -15,7 +15,7 @@ export function UserMenu() {
 ## Install
 
 ```sh
-npm install --save-dev @carles/component-identity
+npm install --save-dev @carlesandres/component-identity
 ```
 
 ## Use
@@ -102,7 +102,7 @@ Use `--config` to point at another config file and `--cwd` to audit a different 
 ## Library API
 
 ```ts
-import { audit, componentNameToKebabCase } from "@carles/component-identity";
+import { audit, componentNameToKebabCase } from "@carlesandres/component-identity";
 
 const result = audit({ cwd: process.cwd() });
 

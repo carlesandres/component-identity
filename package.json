@@ -1,5 +1,5 @@
 {
-  "name": "@carles/component-identity",
+  "name": "@carlesandres/component-identity",
   "version": "0.1.0",
   "description": "Audit exported React components for canonical data-component root attributes.",
   "type": "module",
