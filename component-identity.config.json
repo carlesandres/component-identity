@@ -1,0 +1,17 @@
+{
+  "attribute": "data-component",
+  "include": [
+    "src/**/*.{ts,tsx,js,jsx}",
+    "app/**/*.{ts,tsx,js,jsx}",
+    "components/**/*.{ts,tsx,js,jsx}"
+  ],
+  "exclude": [
+    "**/components/ui/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.stories.*",
+    "**/*.d.ts",
+    "**/node_modules/**",
+    "**/dist/**"
+  ]
+}
