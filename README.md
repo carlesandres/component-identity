@@ -20,7 +20,7 @@ npm install --save-dev @carlesandres/component-identity
 
 ## Use
 
-Add a config file:
+After installing the package, add a config file:
 
 ```sh
 npx component-identity init
@@ -39,6 +39,12 @@ npx component-identity report
 npx component-identity audit --json
 ```
 
+For one-off use without installing first, use the scoped package name:
+
+```sh
+npx @carlesandres/component-identity audit
+```
+
 The audit exits with code `1` when violations are found, so it can be used directly in CI.
 
 ```json
@@ -51,7 +57,7 @@ The audit exits with code `1` when violations are found, so it can be used direc
 
 ## What v0.1 Checks
 
-The MVP checks exported React components that return a root host DOM element:
+The MVP checks named exported React components that return a root host DOM element:
 
 ```tsx
 export function UserMenu() {
@@ -63,7 +69,11 @@ export const AccountCard = () => {
 };
 ```
 
-It also supports simple `forwardRef` wrappers:
+It supports:
+
+- `export function ComponentName() { ... }`
+- `export const ComponentName = () => ...`
+- simple `forwardRef` wrappers assigned to exported constants
 
 ```tsx
 export const Button = forwardRef<HTMLButtonElement>((props, ref) => {
@@ -71,7 +81,9 @@ export const Button = forwardRef<HTMLButtonElement>((props, ref) => {
 });
 ```
 
-The MVP intentionally ignores components whose root is another custom component, a fragment, a portal, or an `asChild` pattern.
+It ignores private components and exported components whose root is another custom component, a fragment, or a non-JSX expression such as a portal call.
+
+It does not yet support default exports, re-export lists, `memo(...)` wrappers, or full `asChild` composition analysis.
 
 ## Config
 
