@@ -24,6 +24,7 @@ After installing the package, add a config file:
 
 ```sh
 npx component-identity init
+npx component-identity init --preset next
 ```
 
 Run the audit:
@@ -55,7 +56,7 @@ The audit exits with code `1` when violations are found, so it can be used direc
 }
 ```
 
-## What v0.1 Checks
+## What It Checks
 
 The MVP checks named exported React components that return a root host DOM element:
 
@@ -69,11 +70,14 @@ export const AccountCard = () => {
 };
 ```
 
-It supports:
+It supports exported components declared as:
 
 - `export function ComponentName() { ... }`
 - `export const ComponentName = () => ...`
-- simple `forwardRef` wrappers assigned to exported constants
+- `export default function ComponentName() { ... }`
+- `const ComponentName = () => ...; export default ComponentName`
+- `const ComponentName = () => ...; export { ComponentName }`
+- `memo(ComponentName)` and nested `forwardRef(memo(...))` wrappers
 
 ```tsx
 export const Button = forwardRef<HTMLButtonElement>((props, ref) => {
@@ -81,9 +85,17 @@ export const Button = forwardRef<HTMLButtonElement>((props, ref) => {
 });
 ```
 
-It ignores private components and exported components whose root is another custom component, a fragment, or a non-JSX expression such as a portal call.
+Fragments are audited through their first meaningful JSX DOM child. Empty fragments are reported as skipped with a `fragment-root` reason.
 
-It does not yet support default exports, re-export lists, `memo(...)` wrappers, or full `asChild` composition analysis.
+It ignores private components and reports skipped exported components whose root is another custom component or a non-JSX expression such as a portal call. Custom component roots can be treated as pass-through wrappers with `passThroughComponents`.
+
+## Autofix
+
+Simple missing or mismatched static root attributes can be fixed in place:
+
+```sh
+npx component-identity audit --fix
+```
 
 ## Config
 
@@ -105,11 +117,18 @@ It does not yet support default exports, re-export lists, `memo(...)` wrappers, 
     "**/*.d.ts",
     "**/node_modules/**",
     "**/dist/**"
-  ]
+  ],
+  "excludeFiles": [],
+  "excludeComponents": [],
+  "passThroughComponents": []
 }
 ```
 
-Use `--config` to point at another config file and `--cwd` to audit a different directory.
+Use `--config` to point at another config file and `--cwd` to audit a different directory. `excludeFiles` is an alias for additional file globs; `excludeComponents` accepts exact component names or `*` wildcards.
+
+Use `"preset": "next"`, `npx component-identity init --preset next`, or the exported `nextConfig` for Next.js projects. It extends the default excludes with app/page entry files such as pages, layouts, loading, error, and not-found files, while keeping tests, stories, and `components/ui` excluded.
+
+JSON reports include coverage fields: `componentsFound`, `componentsChecked`, `components`, `auditedComponents`, `skippedComponents`, `fixesApplied`, and `violations`.
 
 ## Library API
 

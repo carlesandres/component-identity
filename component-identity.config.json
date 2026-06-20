@@ -13,5 +13,8 @@
     "**/*.d.ts",
     "**/node_modules/**",
     "**/dist/**"
-  ]
+  ],
+  "excludeFiles": [],
+  "excludeComponents": [],
+  "passThroughComponents": []
 }

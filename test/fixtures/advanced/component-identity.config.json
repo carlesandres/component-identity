@@ -1,0 +1,6 @@
+{
+  "include": ["src/**/*.{ts,tsx,js,jsx}"],
+  "excludeFiles": ["src/excluded-file.tsx"],
+  "excludeComponents": ["IgnoredByName"],
+  "passThroughComponents": ["Slot"]
+}

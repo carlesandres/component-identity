@@ -18,6 +18,23 @@ export const defaultConfig: ComponentIdentityConfig = {
     "**/node_modules/**",
     "**/dist/**",
   ],
+  excludeFiles: [],
+  excludeComponents: [],
+  passThroughComponents: [],
+};
+
+export const nextConfig: ComponentIdentityConfig = {
+  ...defaultConfig,
+  preset: "next",
+  exclude: [
+    ...defaultConfig.exclude,
+    "**/page.*",
+    "**/pages/**",
+    "**/layout.*",
+    "**/loading.*",
+    "**/error.*",
+    "**/not-found.*",
+  ],
 };
 
 export function loadConfig(cwd: string, configPath?: string): ComponentIdentityConfig {
@@ -30,10 +47,15 @@ export function loadConfig(cwd: string, configPath?: string): ComponentIdentityC
   }
 
   const parsed = JSON.parse(readFileSync(resolvedPath, "utf8")) as Partial<ComponentIdentityConfig>;
+  const baseConfig = parsed.preset === "next" ? nextConfig : defaultConfig;
 
   return {
-    attribute: parsed.attribute ?? defaultConfig.attribute,
-    include: parsed.include ?? defaultConfig.include,
-    exclude: parsed.exclude ?? defaultConfig.exclude,
+    preset: parsed.preset,
+    attribute: parsed.attribute ?? baseConfig.attribute,
+    include: parsed.include ?? baseConfig.include,
+    exclude: [...(parsed.exclude ?? baseConfig.exclude), ...(parsed.excludeFiles ?? baseConfig.excludeFiles)],
+    excludeFiles: parsed.excludeFiles ?? baseConfig.excludeFiles,
+    excludeComponents: parsed.excludeComponents ?? baseConfig.excludeComponents,
+    passThroughComponents: parsed.passThroughComponents ?? baseConfig.passThroughComponents,
   };
 }
